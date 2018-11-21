@@ -1,0 +1,21 @@
+{
+  "name": "k-app-connector-kezia-ii",
+  "version": "0.0.0",
+  "description": "Kezia II connector for the inventory managment module of the K-App",
+  "main": "index.js",
+  "repository": "https://github.com/K-Fet/k-app-connector-kezia-ii",
+  "author": "Marc-Antoine Fernandes <marcantoinefernandes@gmail.com>",
+  "license": "Apache-2.0",
+  "private": true,
+  "devDependencies": {
+    "codecov": "^3.1.0",
+    "eslint": "^5.9.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jest": "^22.0.0",
+    "jest": "^23.6.0",
+    "jest-environment-node": "^23.4.0",
+    "jest-extended": "^0.11.0",
+    "nodemon": "^1.18.6"
+  }
+}

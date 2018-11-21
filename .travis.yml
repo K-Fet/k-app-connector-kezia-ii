@@ -1,0 +1,11 @@
+language: node_js
+cache: yarn
+node_js:
+  - "10"
+
+script:
+  - yarn test
+  - codecov
+
+notifications:
+  email: false
