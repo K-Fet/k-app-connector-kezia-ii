@@ -19,6 +19,10 @@
     "nodemon": "^1.18.6"
   },
   "dependencies": {
+    "dotenv": "^6.1.0",
     "odbc": "K-Fet/node-odbc#NAPI_sandbox"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

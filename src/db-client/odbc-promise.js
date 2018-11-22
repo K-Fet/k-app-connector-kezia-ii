@@ -15,8 +15,8 @@ DatabasePromise.prototype.rollbackTransaction = promisify(Database.prototype.rol
 
 class PoolPromise extends Pool {}
 
-PoolPromise.prototype.open = promisify(Pool.prototype.open).bind(this);
-PoolPromise.prototype.close = promisify(Pool.prototype.close).bind(this);
+PoolPromise.prototype.open = promisify(Pool.prototype.open);
+PoolPromise.prototype.close = promisify(Pool.prototype.close);
 
 module.exports = {
   Database: DatabasePromise,
