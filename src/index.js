@@ -29,6 +29,10 @@ class KeziaIIConnector {
         // eslint-disable-next-line no-param-reassign
         data.lastSucceededRun = await events.run(data);
       },
+      data: {
+        // TODO Load from last run
+        lastSucceededRun: new Date(0),
+      },
     });
 
     this.runner = new Runner({
