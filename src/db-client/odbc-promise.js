@@ -1,4 +1,4 @@
-const { Database, Pool } = require('odbc');
+const { Database } = require('odbc');
 const { promisify } = require('util');
 
 class DatabasePromise extends Database {}
@@ -12,13 +12,6 @@ DatabasePromise.prototype.beginTransaction = promisify(Database.prototype.beginT
 DatabasePromise.prototype.commitTransaction = promisify(Database.prototype.commitTransaction);
 DatabasePromise.prototype.rollbackTransaction = promisify(Database.prototype.rollbackTransaction);
 
-
-class PoolPromise extends Pool {}
-
-PoolPromise.prototype.open = promisify(Pool.prototype.open);
-PoolPromise.prototype.close = promisify(Pool.prototype.close);
-
 module.exports = {
   Database: DatabasePromise,
-  Pool: PoolPromise,
 };

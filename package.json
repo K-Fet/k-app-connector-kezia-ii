@@ -1,7 +1,7 @@
 {
   "name": "k-app-connector-kezia-ii",
   "version": "0.0.0",
-  "description": "Kezia II connector for the inventory managment module of the K-App",
+  "description": "Kezia II connector for the inventory management module of the K-App",
   "main": "index.js",
   "repository": "https://github.com/K-Fet/k-app-connector-kezia-ii",
   "author": "Marc-Antoine Fernandes <marcantoinefernandes@gmail.com>",
@@ -19,10 +19,13 @@
     "nodemon": "^1.18.6"
   },
   "dependencies": {
-    "dotenv": "^6.1.0",
+    "axios": "^0.18.0",
+    "dotenv": "^6.2.0",
+    "generic-pool": "^3.4.2",
     "odbc": "K-Fet/node-odbc#NAPI_sandbox"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "jest"
   }
 }

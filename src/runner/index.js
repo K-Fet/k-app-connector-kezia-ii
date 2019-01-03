@@ -36,16 +36,21 @@ class Runner {
 
   run() {
     // TODO Add some logging
+
+    // eslint-disable-next-line
+    this.options.tasks.forEach(t => t.data = t.data || {});
+
     const runningTasks = this.options.tasks
       .filter(t => !t.disabled)
-      .map(t => ({ p: t.handler(t.options), t }))
+      .map(t => ({ p: t.handler(t.options, t.data), t }))
       .map(({ p, t }) => p
         .then(d => console.log(`Task ${t.name} terminated with success!`, d))
         .catch(e => console.error(`Task ${t.name} terminated failing!`, e)));
 
-    Promise.all(runningTasks).then(() => {
-      this.intervalId = setTimeout(this.run.bind(this), this.options.interval);
-    });
+    Promise.all(runningTasks)
+      .then(() => {
+        this.intervalId = setTimeout(this.run.bind(this), this.options.interval);
+      });
   }
 }
 

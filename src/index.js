@@ -1,4 +1,5 @@
 const Runner = require('./runner');
+const events = require('./events');
 
 class KeziaIIConnector {
   constructor(options) {
@@ -8,11 +9,32 @@ class KeziaIIConnector {
   }
 
   init() {
-    // TODO:
-    //  - Database Init
-    //  - API Init (credentials)
-    //  - Runner configuration
-    this.runner = new Runner(this.options.runner);
+    const missingEnv = [
+      'ODBC_CN',
+      'K_APP_URL',
+      'K_APP_AUTH_TOKEN',
+    ].filter(envName => !process.env[envName]).join(',');
+
+    if (missingEnv) {
+      console.error(`Following environment variables are missing: ${missingEnv}`);
+      process.exit(1);
+      return;
+    }
+
+    const tasks = [];
+
+    tasks.push({
+      name: 'events',
+      async handler(options, data) {
+        // eslint-disable-next-line no-param-reassign
+        data.lastSucceededRun = await events.run(data);
+      },
+    });
+
+    this.runner = new Runner({
+      ...this.options.runner,
+      tasks,
+    });
   }
 
   run() {
@@ -20,4 +42,6 @@ class KeziaIIConnector {
   }
 }
 
-module.exports = KeziaIIConnector;
+module.exports = {
+  KeziaIIConnector,
+};

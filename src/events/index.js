@@ -1,10 +1,10 @@
-const { instance } = require('../db-client');
+const pool = require('../db-client');
 const reader = require('./reader');
 const transformer = require('./transformer');
 const kAppApi = require('../k-app-api');
 
 async function run({ lastSucceededRun }) {
-  const db = await instance();
+  const db = await pool.acquire();
 
   const data = await reader.read(db, { lastSucceededRun });
 
@@ -13,11 +13,10 @@ async function run({ lastSucceededRun }) {
 
   const transformedData = await transformer.transform(data);
 
-  const res = await kAppApi.sendStockEvents(transformedData);
+  await kAppApi.sendStockEvents(transformedData);
 
-  // If res.ok check
-
-  await db.close();
+  // Maybe we should let it fail without crashing the task?
+  await pool.release(db);
 
   return currentTime;
 }
