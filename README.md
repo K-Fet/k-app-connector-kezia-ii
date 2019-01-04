@@ -12,7 +12,14 @@ You will need to have some environment variables set:
 - `K_APP_USERNAME`: K-App username to the connector account
 - `K_APP_PASSWORD`: K-App password to the connector account
 
+### Connector Account
+
+For now, you will need a special account with 2 permissions:
+- `inventory-management:products:list` to match KeziaII products and K-App products
+- `inventory-management:stock-events:add` to add events
+
+
 ## Roadmap
 
 - Connect to the K-App through a token instead of an account
-
+- Improve matching between KeziaII and K-App
