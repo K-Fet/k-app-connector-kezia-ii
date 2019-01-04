@@ -1,4 +1,7 @@
+const stringSimilarity = require('string-similarity');
 const kAppApi = require('../../k-app-api');
+
+const MATCH_THRESHOLD = 0.5;
 
 function normalizeName(name) {
   return name
@@ -15,18 +18,22 @@ function normalizeName(name) {
  * @return {string|null} Matching product or null
  */
 function getCorrespondingProduct(name, products) {
-  let id;
-
+  // Find the best match for product name
   const normalizedName = normalizeName(name);
   const productsName = products
     .map(p => p.name)
     .map(normalizeName);
 
-  if (!id) {
+  const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(normalizedName, productsName);
+
+  // Stop if really different
+  if (bestMatch.rating < MATCH_THRESHOLD) {
     console.warn(`Could not find K-App product for ${name}`);
     return null;
   }
-  return id;
+
+  // Find related product id
+  return products[bestMatchIndex]._id;
 }
 
 
@@ -39,21 +46,13 @@ function getCorrespondingProduct(name, products) {
 async function transform(data) {
   const products = await kAppApi.getAllProducts();
 
-  return data.map((d) => {
-    const {
-      DATE, IDART, DEF, Q_VAR,
-    } = d;
-
-    const product = getCorrespondingProduct(DEF, products);
-
-    return {
-      product,
-      diff: Q_VAR,
-      type: 'Transaction',
-      date: DATE,
-      meta: `IDART:${IDART}`,
-    };
-  }).filter(e => !!e.product);
+  return data.map(({ DATE, IDART, DEF, Q_VAR }) => ({
+    product: getCorrespondingProduct(DEF, products),
+    diff: Q_VAR,
+    type: 'Transaction',
+    date: DATE,
+    meta: `IDART:${IDART}`,
+  })).filter(e => !!e.product);
 }
 
 

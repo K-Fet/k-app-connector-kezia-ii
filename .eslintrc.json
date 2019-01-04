@@ -30,7 +30,15 @@
         "ignoreStrings": true
       }
     ],
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "minProperties": 6,
+        "multiline": true,
+        "consistent": true
+      }
+    ]
   },
   "root": true,
   "overrides": [
