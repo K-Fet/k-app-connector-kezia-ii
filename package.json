@@ -23,7 +23,8 @@
     "date-fns": "^2.0.0-alpha.26",
     "dotenv": "^6.2.0",
     "generic-pool": "^3.4.2",
-    "odbc": "K-Fet/node-odbc#NAPI_sandbox"
+    "odbc": "K-Fet/node-odbc#NAPI_sandbox",
+    "string-similarity": "^3.0.0"
   },
   "scripts": {
     "start": "node index.js",

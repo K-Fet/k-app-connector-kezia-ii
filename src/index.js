@@ -26,12 +26,7 @@ class KeziaIIConnector {
     tasks.push({
       name: 'events',
       async handler(options, data) {
-        // eslint-disable-next-line no-param-reassign
-        data.lastSucceededRun = await events.run(data);
-      },
-      data: {
-        // TODO Load from last run
-        lastSucceededRun: new Date(0),
+        await events.run(data);
       },
     });
 

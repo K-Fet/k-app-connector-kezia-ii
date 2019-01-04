@@ -35,7 +35,7 @@ class Runner {
   }
 
   run() {
-    // TODO Add some logging
+    console.log('Starting new run session');
 
     // eslint-disable-next-line
     this.options.tasks.forEach(t => t.data = t.data || {});

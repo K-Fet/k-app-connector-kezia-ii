@@ -63,6 +63,8 @@ node_modules/
 *.css.map
 *.iws
 
+# Runtime data
+*.bin
 
 # Ignore backups
 backups/
