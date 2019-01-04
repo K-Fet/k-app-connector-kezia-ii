@@ -48,9 +48,13 @@ async function run() {
   // Save time just after the database request
   const currentTime = new Date();
 
+  // Need K-App here
+  await kAppApi.connect();
+
   const transformedData = await transformer.transform(data);
 
   await kAppApi.sendStockEvents(transformedData);
+  kAppApi.disconnect();
 
   await saveLastRun(currentTime);
 
