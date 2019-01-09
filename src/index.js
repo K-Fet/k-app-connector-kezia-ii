@@ -1,5 +1,6 @@
 const Runner = require('./runner');
 const events = require('./events');
+const pool = require('./db-client');
 
 class KeziaIIConnector {
   constructor(options) {
@@ -36,8 +37,14 @@ class KeziaIIConnector {
     });
   }
 
-  run() {
-    this.runner.run();
+  start() {
+    this.runner.startAll();
+  }
+
+  stop() {
+    this.runner.stopAll();
+    // Force clear pool
+    pool.drain().then(() => pool.clear());
   }
 }
 

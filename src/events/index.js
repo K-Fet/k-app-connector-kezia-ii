@@ -43,23 +43,25 @@ async function run() {
 
   const db = await pool.acquire();
 
-  const data = await reader.read(db, { lastSucceededRun });
+  try {
+    const data = await reader.read(db, { lastSucceededRun });
 
-  // Save time just after the database request
-  const currentTime = new Date();
+    // Save time just after the database request
+    const currentTime = new Date();
 
-  // Need K-App here
-  await kAppApi.connect();
+    // Need K-App here
+    await kAppApi.connect();
 
-  const transformedData = await transformer.transform(data);
+    const transformedData = await transformer.transform(data);
 
-  await kAppApi.sendStockEvents(transformedData);
-  kAppApi.disconnect();
+    await kAppApi.sendStockEvents(transformedData);
+    kAppApi.disconnect();
 
-  await saveLastRun(currentTime);
-
-  // Maybe we should let it fail without crashing the task?
-  await pool.release(db);
+    await saveLastRun(currentTime);
+  } finally {
+    // Maybe we should let it fail without crashing the task?
+    pool.release(db);
+  }
 }
 
 module.exports = {

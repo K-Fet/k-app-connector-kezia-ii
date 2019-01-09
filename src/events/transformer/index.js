@@ -1,7 +1,7 @@
 const stringSimilarity = require('string-similarity');
 const kAppApi = require('../../k-app-api');
 
-const MATCH_THRESHOLD = 0.5;
+const MATCH_THRESHOLD = +process.env.PRODUCTS_MATCH_THRESHOLD || 0.5;
 
 function normalizeName(name) {
   return name
@@ -18,6 +18,8 @@ function normalizeName(name) {
  * @return {string|null} Matching product or null
  */
 function getCorrespondingProduct(name, products) {
+  if (!products.length) return null;
+
   // Find the best match for product name
   const normalizedName = normalizeName(name);
   const productsName = products

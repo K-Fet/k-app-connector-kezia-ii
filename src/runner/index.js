@@ -8,7 +8,8 @@ class Runner {
   }
 
   startAll() {
-    this.intervalId = setTimeout(this.run.bind(this), this.options.interval);
+    console.log(`Starting runner with interval of ${this.options.interval / 1000} seconds`);
+    this._run();
   }
 
   start(taskName) {
@@ -34,7 +35,7 @@ class Runner {
     this.intervalId = null;
   }
 
-  run() {
+  _run() {
     console.log('Starting new run session');
 
     // eslint-disable-next-line
@@ -49,7 +50,7 @@ class Runner {
 
     Promise.all(runningTasks)
       .then(() => {
-        this.intervalId = setTimeout(this.run.bind(this), this.options.interval);
+        this.intervalId = setTimeout(this._run.bind(this), this.options.interval);
       });
   }
 }
