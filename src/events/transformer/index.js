@@ -3,7 +3,7 @@ const { parse } = require('date-fns');
 const kAppApi = require('../../k-app-api');
 
 const MATCH_THRESHOLD = +process.env.PRODUCTS_MATCH_THRESHOLD || 0.5;
-const DATE_FORMAT = 'yyyy-MM dd:HH:mm::sss';
+const DATE_FORMAT = 'yyyy-MM dd:HH:mm:sss';
 
 function normalizeName(name) {
   return name
@@ -54,7 +54,7 @@ async function transform(data) {
     product: getCorrespondingProduct(DEF, products),
     diff: Q_VAR,
     type: 'Transaction',
-    date: parse(DATE.substring(3), DATE_FORMAT, new Date()),
+    date: parse(DATE.substring(4), DATE_FORMAT, new Date()),
     meta: `IDART:${IDART}`,
   })).filter(e => !!e.product);
 }
