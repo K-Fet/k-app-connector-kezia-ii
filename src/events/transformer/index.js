@@ -54,7 +54,7 @@ async function transform(data) {
     product: getCorrespondingProduct(DEF, products),
     diff: Q_VAR,
     type: 'Transaction',
-    date: parse(DATE.substring(4), DATE_FORMAT, new Date()),
+    date: parse(DATE.substring(4).replace('.', ':'), DATE_FORMAT, new Date()),
     meta: `IDART:${IDART}`,
   })).filter(e => !!e.product);
 }

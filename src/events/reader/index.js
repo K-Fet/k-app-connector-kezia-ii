@@ -17,7 +17,7 @@ async function read(db, { lastSucceededRun }) {
 
   const res = await db.query(query);
 
-  console.log(`Got ${res} new events since then`);
+  console.log(`Got ${res.length} new events since then`);
   return res;
 }
 
