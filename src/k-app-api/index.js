@@ -8,14 +8,14 @@ axios.defaults.baseURL = process.env.K_APP_URL;
 
 async function connect() {
   if (isTesting()) return;
-  const { jwt } = await axios.post('/api/v1/auth/login', {
+  const { data } = await axios.post('/api/v1/auth/login', {
     email: process.env.K_APP_USERNAME,
     password: process.env.K_APP_PASSWORD,
     // 5 minutes token
     rememberMe: 5,
   });
 
-  axios.defaults.headers.common.Authorization = `Bearer ${jwt}`;
+  axios.defaults.headers.common.Authorization = `Bearer ${data.jwt}`;
 }
 
 function disconnect() {

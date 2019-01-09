@@ -13,7 +13,8 @@ class KeziaIIConnector {
     const missingEnv = [
       'ODBC_CN',
       'K_APP_URL',
-      'K_APP_AUTH_TOKEN',
+      'K_APP_USERNAME',
+      'K_APP_PASSWORD',
     ].filter(envName => !process.env[envName]).join(',');
 
     if (missingEnv) {
