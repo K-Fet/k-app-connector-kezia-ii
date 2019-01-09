@@ -3,7 +3,7 @@ const { parse } = require('date-fns');
 const kAppApi = require('../../k-app-api');
 
 const MATCH_THRESHOLD = +process.env.PRODUCTS_MATCH_THRESHOLD || 0.5;
-const DATE_FORMAT = 'yyyy-MM dd:HH:mm::0ss';
+const DATE_FORMAT = 'yyyy-MM dd:HH:mm::sss';
 
 function normalizeName(name) {
   return name
