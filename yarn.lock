@@ -2929,7 +2929,7 @@ mute-stream@0.0.7:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-nan@^2.9.2:
+nan@^2.10.0, nan@^2.9.2:
   version "2.12.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.12.1.tgz#7b1aa193e9aa86057e3c7bbd0ac448e770925552"
   integrity sha512-JY7V6lRkStKcKTvHO5NVSQRv+RV+FIL5pvDoLiAtSL9pKlC5x9PKQcZDsq7m4FO4d57mkhC6Z+QhAh3Jdk5JFw==
@@ -2969,11 +2969,6 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-
-node-addon-api@^1.3.0:
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-1.6.2.tgz#d8aad9781a5cfc4132cc2fecdbdd982534265217"
-  integrity sha512-479Bjw9nTE5DdBSZZWprFryHGjUaQC31y1wHo19We/k0BZlrmhqQitWoUL0cD8+scljCbIUL+E58oRDEakdGGA==
 
 node-int64@^0.4.0:
   version "0.4.0"
@@ -3168,12 +3163,13 @@ object.pick@^1.3.0:
   dependencies:
     isobject "^3.0.1"
 
-odbc@K-Fet/node-odbc#NAPI_sandbox:
+odbc@^1.4.5:
   version "1.4.5"
-  resolved "https://codeload.github.com/K-Fet/node-odbc/tar.gz/6bc6e69366036178831ca88ad5ed1ac18b86a448"
+  resolved "https://registry.yarnpkg.com/odbc/-/odbc-1.4.5.tgz#2d8fdb13be0cd8f8b55ad411516188cfe4d907a9"
+  integrity sha512-FlbxbLc7NKbkuqg220RFo5aYcPxgb5pdjPN0DXES6zdvV3ZyuMv+mvTEFNq308LixOvD4QA5bSYJjfqrGQW2wQ==
   dependencies:
     bindings "^1.3.0"
-    node-addon-api "^1.3.0"
+    nan "^2.10.0"
 
 once@^1.3.0, once@^1.4.0:
   version "1.4.0"

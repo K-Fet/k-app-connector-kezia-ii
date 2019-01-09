@@ -1,7 +1,9 @@
 const stringSimilarity = require('string-similarity');
+const { parse } = require('date-fns');
 const kAppApi = require('../../k-app-api');
 
 const MATCH_THRESHOLD = +process.env.PRODUCTS_MATCH_THRESHOLD || 0.5;
+const DATE_FORMAT = 'yyyy-MM dd:HH:mm::0ss';
 
 function normalizeName(name) {
   return name
@@ -52,7 +54,7 @@ async function transform(data) {
     product: getCorrespondingProduct(DEF, products),
     diff: Q_VAR,
     type: 'Transaction',
-    date: DATE,
+    date: parse(DATE.slice(3), DATE_FORMAT),
     meta: `IDART:${IDART}`,
   })).filter(e => !!e.product);
 }

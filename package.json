@@ -23,7 +23,7 @@
     "date-fns": "^2.0.0-alpha.26",
     "dotenv": "^6.2.0",
     "generic-pool": "^3.4.2",
-    "odbc": "K-Fet/node-odbc#NAPI_sandbox",
+    "odbc": "^1.4.5",
     "string-similarity": "^3.0.0"
   },
   "scripts": {
