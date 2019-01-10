@@ -54,6 +54,8 @@ async function run() {
 
     const transformedData = await transformer.transform(data);
 
+    console.log(`Got ${transformedData.length} items to send`);
+
     await kAppApi.sendStockEvents(transformedData);
     kAppApi.disconnect();
 

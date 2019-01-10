@@ -20,7 +20,7 @@ function normalizeName(name) {
  * @return {string|null} Matching product or null
  */
 function getCorrespondingProduct(name, products) {
-  if (!products.length) return null;
+  if (!products.length || !name) return null;
 
   // Find the best match for product name
   const normalizedName = normalizeName(name);
@@ -40,6 +40,16 @@ function getCorrespondingProduct(name, products) {
   return products[bestMatchIndex]._id;
 }
 
+/**
+ * Transform a HyperFile date to a js date.
+ *
+ * @param DATE
+ * @return {never}
+ */
+function getDate(DATE) {
+  if (!DATE) return null;
+  return parse(DATE.substring(4).replace('.', ':'), DATE_FORMAT, new Date());
+}
 
 /**
  * Transform KeziaII data into K-App compatible data.
@@ -54,7 +64,7 @@ async function transform(data) {
     product: getCorrespondingProduct(DEF, products),
     diff: Q_VAR,
     type: 'Transaction',
-    date: parse(DATE.substring(4).replace('.', ':'), DATE_FORMAT, new Date()),
+    date: getDate(DATE),
     meta: `IDART:${IDART}`,
   })).filter(e => !!e.product);
 }
