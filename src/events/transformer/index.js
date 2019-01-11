@@ -22,23 +22,40 @@ function normalizeName(name) {
 function createProductMap(data, products) {
   if (!products.length || !data.length) return null;
 
-  const articles = data.reduce((acc, { IDART, DEF }) => ({ ...acc, [IDART]: normalizeName(DEF) }), {});
-  const remainingProducts = [...products.map(p => p.name).map(normalizeName)];
+  const articles = data.reduce((acc, { IDART, DEF }) => ({ ...acc, [IDART]: DEF }), {});
 
-  return Object
+  const usedProducts = new Set();
+
+  // Create a cross join array with string similarity for each pairs
+  const ratings = Object
     .entries(articles)
-    .map(([idart, def]) => {
-      const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(def, remainingProducts);
-
-      // Stop if really different
-      if (bestMatch.rating < MATCH_THRESHOLD) {
-        console.warn(`Could not find K-App product for ${def}`);
-        return null;
-      }
-      const [product] = remainingProducts.slice(bestMatchIndex, 1);
-      return product;
+    .map(([idart, def]) => products.map(({ _id, name }) => ({
+      article: def,
+      articleId: idart,
+      product: name,
+      productId: _id,
+      // TODO Find a better comparison algorithm
+      //  In order to improve rating for simple mistakes like 'mikl' instead of 'milk'
+      similarity: stringSimilarity.compareTwoStrings(normalizeName(def), normalizeName(name)),
+    })))
+    // Flatten array (flatMap not available yet)
+    .reduce((acc, el) => acc.concat(el), [])
+    .sort((a, b) => b.similarity - a.similarity)
+    .filter(o => o.similarity > MATCH_THRESHOLD)
+    // Remove duplicate product match
+    .filter((o) => {
+      if (usedProducts.has(o.productId)) return false;
+      usedProducts.add(o.productId);
+      return true;
     })
-    .reduce((acc, {}) => {});
+    .reduce((acc, r) => ({ ...acc, [r.articleId]: r.productId }), {});
+
+  // Now we reduce this cross joi array
+  return Object
+    .keys(articles)
+    .map(idart => ratings.find(r => r.articleId === idart))
+    .filter(r => !!r)
+    .reduce((acc, rating) => ({ ...acc, [rating.articleId]: rating.productId }), {});
 }
 
 /**
@@ -63,6 +80,7 @@ async function transform(data) {
 
   const productMap = createProductMap(data, products);
 
+  console.log('Product - article map', productMap);
   return data.map(({ DATE, IDART, Q_VAR }) => ({
     product: productMap[IDART],
     diff: Q_VAR,

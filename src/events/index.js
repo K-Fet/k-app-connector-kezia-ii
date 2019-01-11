@@ -59,6 +59,7 @@ async function run() {
     await kAppApi.sendStockEvents(transformedData);
     kAppApi.disconnect();
 
+    throw new Error();
     await saveLastRun(currentTime);
   } finally {
     // Maybe we should let it fail without crashing the task?
