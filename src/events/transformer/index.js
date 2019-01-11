@@ -13,31 +13,32 @@ function normalizeName(name) {
 }
 
 /**
- * Find the corresponding K-App product id
+ * Create an mapping object between Kezia articles and K-App products
  *
- * @param name {string} KeziaII article name
+ * @param data {any[]} Read data
  * @param products {any[]} K-App products
- * @return {string|null} Matching product or null
+ * @return {any} A map matching Kezia articles and K-App products
  */
-function getCorrespondingProduct(name, products) {
-  if (!products.length || !name) return null;
+function createProductMap(data, products) {
+  if (!products.length || !data.length) return null;
 
-  // Find the best match for product name
-  const normalizedName = normalizeName(name);
-  const productsName = products
-    .map(p => p.name)
-    .map(normalizeName);
+  const articles = data.reduce((acc, { IDART, DEF }) => ({ ...acc, [IDART]: normalizeName(DEF) }), {});
+  const remainingProducts = [...products.map(p => p.name).map(normalizeName)];
 
-  const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(normalizedName, productsName);
+  return Object
+    .entries(articles)
+    .map(([idart, def]) => {
+      const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(def, remainingProducts);
 
-  // Stop if really different
-  if (bestMatch.rating < MATCH_THRESHOLD) {
-    console.warn(`Could not find K-App product for ${name}`);
-    return null;
-  }
-
-  // Find related product id
-  return products[bestMatchIndex]._id;
+      // Stop if really different
+      if (bestMatch.rating < MATCH_THRESHOLD) {
+        console.warn(`Could not find K-App product for ${def}`);
+        return null;
+      }
+      const [product] = remainingProducts.slice(bestMatchIndex, 1);
+      return product;
+    })
+    .reduce((acc, {}) => {});
 }
 
 /**
@@ -60,8 +61,10 @@ function getDate(DATE) {
 async function transform(data) {
   const products = await kAppApi.getAllProducts();
 
-  return data.map(({ DATE, IDART, DEF, Q_VAR }) => ({
-    product: getCorrespondingProduct(DEF, products),
+  const productMap = createProductMap(data, products);
+
+  return data.map(({ DATE, IDART, Q_VAR }) => ({
+    product: productMap[IDART],
     diff: Q_VAR,
     type: 'Transaction',
     date: getDate(DATE),
