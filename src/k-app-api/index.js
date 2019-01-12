@@ -6,6 +6,25 @@ const PRODUCT_PAGE_SIZE = 1000;
 
 axios.defaults.baseURL = process.env.K_APP_URL;
 
+const TEST_PRODUCTS = [
+  {
+    _id: 1,
+    name: 'Fût triple K',
+  },
+  {
+    _id: 2,
+    name: 'Fût ninka triple',
+  },
+  {
+    _id: 3,
+    name: 'Fût ninka fipa',
+  },
+  {
+    _id: 4,
+    name: 'Fût ninka noel',
+  },
+];
+
 async function connect() {
   if (isTesting()) return;
   const { data } = await axios.post('/api/v1/auth/login', {
@@ -31,7 +50,7 @@ async function sendStockEvents(data) {
 }
 
 async function getAllProducts() {
-  if (isTesting()) return [];
+  if (isTesting()) return TEST_PRODUCTS;
   const res = await axios.get(`/api/v2/inventory-management/products?pageSize=${PRODUCT_PAGE_SIZE}`);
   console.log('Products received:', res.data);
   return res.data.rows;

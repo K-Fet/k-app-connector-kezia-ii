@@ -9,7 +9,7 @@ install:
   - yarn global add codecov
 
 script:
-  - yarn test --coverage
+  - yarn test
   - codecov
 
 notifications:

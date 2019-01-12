@@ -13,31 +13,48 @@ function normalizeName(name) {
 }
 
 /**
- * Find the corresponding K-App product id
+ * Create an mapping object between Kezia articles and K-App products
  *
- * @param name {string} KeziaII article name
+ * @param data {any[]} Read data
  * @param products {any[]} K-App products
- * @return {string|null} Matching product or null
+ * @return {Map} A map matching Kezia articles and K-App products
  */
-function getCorrespondingProduct(name, products) {
-  if (!products.length || !name) return null;
+function createProductMap(data, products) {
+  if (!products.length || !data.length) return null;
 
-  // Find the best match for product name
-  const normalizedName = normalizeName(name);
-  const productsName = products
-    .map(p => p.name)
-    .map(normalizeName);
+  // Compute unique articles by id with their names
+  const articles = new Map(data.map(({ IDART, DEF }) => [IDART, DEF]));
 
-  const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(normalizedName, productsName);
+  // Used to only have one match per product
+  const usedProducts = new Set();
 
-  // Stop if really different
-  if (bestMatch.rating < MATCH_THRESHOLD) {
-    console.warn(`Could not find K-App product for ${name}`);
-    return null;
-  }
-
-  // Find related product id
-  return products[bestMatchIndex]._id;
+  return new Map(
+    Array
+      .from(articles)
+      // Create a cross join array with string similarity for each pairs
+      .map(([idart, def]) => products.map(({ _id, name }) => ({
+        article: def,
+        articleId: idart,
+        product: name,
+        productId: _id,
+        // TODO Find a better comparison algorithm
+        //  In order to improve rating for simple mistakes like 'mikl' instead of 'milk'
+        similarity: stringSimilarity.compareTwoStrings(normalizeName(def), normalizeName(name)),
+      })))
+      // Flatten array (flatMap not available yet)
+      .reduce((acc, el) => acc.concat(el), [])
+      // Sort by best match
+      .sort((a, b) => b.similarity - a.similarity)
+      // Remove unrelated pairs
+      .filter(o => o.similarity > MATCH_THRESHOLD)
+      // Keep only the best rated pair
+      .filter((o) => {
+        if (usedProducts.has(o.productId)) return false;
+        usedProducts.add(o.productId);
+        return true;
+      })
+      .map(r => [r.articleId, r.productId]),
+  );
 }
 
 /**
@@ -60,8 +77,11 @@ function getDate(DATE) {
 async function transform(data) {
   const products = await kAppApi.getAllProducts();
 
-  return data.map(({ DATE, IDART, DEF, Q_VAR }) => ({
-    product: getCorrespondingProduct(DEF, products),
+  const productMap = createProductMap(data, products);
+  console.log('Product - article map', productMap);
+
+  return data.map(({ DATE, IDART, Q_VAR }) => ({
+    product: productMap.get(IDART),
     diff: Q_VAR,
     type: 'Transaction',
     date: getDate(DATE),
