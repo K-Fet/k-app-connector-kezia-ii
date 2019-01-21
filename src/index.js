@@ -12,6 +12,8 @@ class KeziaIIConnector {
   init() {
     const missingEnv = [
       'ODBC_CN',
+      'ERROR_EMAIL',
+      'SENDGRID_API_KEY',
       'K_APP_URL',
       'K_APP_USERNAME',
       'K_APP_PASSWORD',

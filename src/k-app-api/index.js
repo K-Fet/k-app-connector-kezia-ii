@@ -1,5 +1,8 @@
+const sgMail = require('@sendgrid/mail');
 const axios = require('axios').default;
 const { isTesting } = require('../utils');
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // The system will not totally work after 1000 products
 const PRODUCT_PAGE_SIZE = 1000;
@@ -56,9 +59,29 @@ async function getAllProducts() {
   return res.data.rows;
 }
 
+/**
+ * Send a notification by email to configured email.
+ * Use Sendgrid for now sender service
+ *
+ * @param error {Error}
+ * @return {Promise<void>}
+ */
+async function sendFailNotification(error) {
+  await sgMail.send({
+    to: process.env.ERROR_EMAIL,
+    from: 'k-app-connector-kezia-ii@dummy.com',
+    subject: '[K-App-connector-Kezia-II] Problème avec le connecteur',
+    text: `Error: ${error.name}
+           Description: ${error.message}
+           Stacktrace: ${error.stack}
+    `,
+  });
+}
+
 module.exports = {
   connect,
   disconnect,
   sendStockEvents,
   getAllProducts,
+  sendFailNotification,
 };

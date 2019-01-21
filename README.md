@@ -11,6 +11,9 @@ You will need to have some environment variables set:
 - `K_APP_URL`: URL to the K-App (e.g.: `https://kfet-insa.fr`)
 - `K_APP_USERNAME`: K-App username to the connector account
 - `K_APP_PASSWORD`: K-App password to the connector account
+- `ERROR_EMAIL`: Email to contact if there is a problem
+- `SENDGRID_API_KEY`: Sendgrid API Key to send mail
+- `MAX_TASK_FAILED`: Max time a task may fail in a row
 - `PRODUCTS_MATCH_THRESHOLD`: Optional. Threshold for product matching
 - `PULL_MINUTES_INTERVAL`: Optional. Interval to run tasks
 
@@ -25,3 +28,4 @@ For now, you will need a special account with 2 permissions:
 
 - Connect to the K-App through a token instead of an account
 - Improve matching between KeziaII and K-App products
+- Use an api endpoint from K-App as health check
