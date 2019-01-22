@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs').promises;
-const { toDate } = require('date-fns');
+const { parseISO } = require('date-fns');
 const pool = require('../db-client');
 const reader = require('./reader');
 const transformer = require('./transformer');
@@ -32,7 +32,7 @@ async function loadLastRun() {
     throw e;
   }
 
-  const date = toDate(content);
+  const date = parseISO(content);
 
   if (date !== 'Invalid Date') return date;
   return new Date();
