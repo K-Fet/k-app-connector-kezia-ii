@@ -78,10 +78,26 @@ async function sendFailNotification(error) {
   });
 }
 
+/**
+ * Send a notification by email to configured email.
+ * Use Sendgrid for now sender service
+ *
+ * @return {Promise<void>}
+ */
+async function sendFailRecoverNotification(task) {
+  await sgMail.send({
+    to: process.env.ERROR_EMAIL,
+    from: 'k-app-connector-kezia-ii@dummy.com',
+    subject: '[K-App-connector-Kezia-II] Récupération du problème avec le connecteur',
+    text: `Récupération de la tache après ${task._failedCount} échecs`,
+  });
+}
+
 module.exports = {
   connect,
   disconnect,
   sendStockEvents,
   getAllProducts,
   sendFailNotification,
+  sendFailRecoverNotification,
 };

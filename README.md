@@ -4,7 +4,12 @@ Kezia II connector for the inventory management module of the K-App.
 
 ## Usage
 
-Just run the app in production mode.
+When doing a `yarn`, the app will automatically install itself as a **Windows service**. You still
+need to set correct environment variables inside a `.env`at the root of the project.
+
+> You can copy the `.env.example` to `.env` and fill it.
+
+> In order to work, the ODBC connection must be at system scope and not in userland.
 
 You will need to have some environment variables set:
 - `ODBC_CN`: ODBC Connection string to connect to KeziaII database (e.g.: `DSN=odbc_dsn;Uid=User;Pwd=Password;`)

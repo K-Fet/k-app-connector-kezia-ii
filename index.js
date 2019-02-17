@@ -10,6 +10,7 @@ const connector = new KeziaIIConnector({
     interval: PULL_MINUTES_INTERVAL * 60 * 1000,
     maxTaskFailed: MAX_TASK_FAILED,
     taskFailHandler: kAppApi.sendFailNotification,
+    taskFailRecover: kAppApi.sendFailRecoverNotification,
   },
 });
 

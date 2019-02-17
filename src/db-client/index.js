@@ -5,7 +5,12 @@ const factory = {
   create: async () => {
     const db = new Database();
     console.log('Creating new database instance');
-    await db.open(process.env.ODBC_CN);
+    try {
+      await db.open(process.env.ODBC_CN);
+    } catch (e) {
+      console.error('Unable to create database', e);
+      throw e;
+    }
     console.log('New database instance created');
     return db;
   },

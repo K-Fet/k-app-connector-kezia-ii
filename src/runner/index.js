@@ -6,6 +6,7 @@ class Runner {
       interval: 1000 * 60 * 2,
       maxTaskFailed: -1,
       taskFailHandler: null,
+      taskFailRecover: null,
       ...options,
     };
   }
@@ -48,7 +49,13 @@ class Runner {
     }
   }
 
-  static _resetTaskFailed(t) {
+  async _resetTaskFailed(t) {
+    const { taskFailRecover } = this.options;
+    if (t._taskFailHandled && taskFailRecover) {
+      // Send notification about fixed error
+      await taskFailRecover(t);
+    }
+
     t._failedCount = 0;
     t._taskFailHandled = false;
   }
@@ -65,7 +72,7 @@ class Runner {
       .map(({ p, t }) => p
         .then((d) => {
           console.log(`Task ${t.name} terminated with success!`, d);
-          Runner._resetTaskFailed(t);
+          this._resetTaskFailed(t);
         })
         .catch((e) => {
           console.error(`Task ${t.name} terminated failing!`, e);
