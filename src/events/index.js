@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs').promises;
-const { parseISO } = require('date-fns');
+const { parseISO, isValid, subMilliseconds } = require('date-fns');
 const pool = require('../db-client');
 const reader = require('./reader');
 const transformer = require('./transformer');
@@ -22,7 +22,7 @@ async function saveLastRun(time) {
  *
  * @returns {Promise<Date>}
  */
-async function loadLastRun() {
+async function loadLastRun({ interval = 0 }) {
   let content;
   try {
     content = await fs.readFile(LAST_RUN_PATH, { encoding: 'utf8' });
@@ -34,12 +34,12 @@ async function loadLastRun() {
 
   const date = parseISO(content);
 
-  if (date !== 'Invalid Date') return date;
-  return new Date();
+  if (isValid(date)) return date;
+  return subMilliseconds(new Date(), interval);
 }
 
-async function run() {
-  const lastSucceededRun = await loadLastRun();
+async function run(globalOptions) {
+  const lastSucceededRun = await loadLastRun(globalOptions);
 
   const db = await pool.acquire();
 

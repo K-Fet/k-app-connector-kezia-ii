@@ -29,9 +29,7 @@ class KeziaIIConnector {
 
     tasks.push({
       name: 'events',
-      async handler(options, data) {
-        await events.run(data);
-      },
+      handler: events.run,
     });
 
     this.runner = new Runner({

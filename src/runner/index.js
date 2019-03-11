@@ -68,7 +68,7 @@ class Runner {
 
     const runningTasks = this.options.tasks
       .filter(t => !t.disabled)
-      .map(t => ({ p: t.handler(t.options, t.data), t }))
+      .map(t => ({ p: t.handler(this.options, t.data), t }))
       .map(({ p, t }) => p
         .then((d) => {
           console.log(`Task ${t.name} terminated with success!`, d);
