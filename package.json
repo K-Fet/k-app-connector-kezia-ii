@@ -25,7 +25,8 @@
     "dotenv": "^6.2.0",
     "generic-pool": "^3.6.1",
     "odbc": "K-Fet/node-odbc#NAPI_sandbox",
-    "string-similarity": "^3.0.0"
+    "string-similarity": "^3.0.0",
+    "snyk": "^1.161.1"
   },
   "optionalDependencies": {
     "node-windows": "^0.1.14"
@@ -35,6 +36,9 @@
     "postinstall": "node scripts/install.js",
     "uninstall": "node scripts/uninstall.js",
     "start": "node index.js",
-    "test": "jest && yarn eslint"
-  }
+    "test": "jest && yarn eslint",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
