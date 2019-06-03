@@ -30,7 +30,7 @@ const TEST_PRODUCTS = [
 
 async function connect() {
   if (isTesting()) return;
-  const { data } = await axios.post('/api/v1/auth/login', {
+  const { data } = await axios.post('/v1/auth/login', {
     email: process.env.K_APP_USERNAME,
     password: process.env.K_APP_PASSWORD,
     // 5 minutes token
@@ -47,14 +47,14 @@ function disconnect() {
 
 async function sendStockEvents(data) {
   if (data.length === 0 || isTesting()) return undefined;
-  const res = await axios.post('/api/v2/inventory-management/stock-events', { entities: data });
+  const res = await axios.post('/v2/inventory-management/stock-events', { entities: data });
   console.log('Stock events sent. Received:', res.data);
   return res;
 }
 
 async function getAllProducts() {
   if (isTesting()) return TEST_PRODUCTS;
-  const res = await axios.get(`/api/v2/inventory-management/products?pageSize=${PRODUCT_PAGE_SIZE}`);
+  const res = await axios.get(`/v2/inventory-management/products?pageSize=${PRODUCT_PAGE_SIZE}`);
   console.log('Products received:', res.data);
   return res.data.rows;
 }

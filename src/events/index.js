@@ -1,20 +1,20 @@
-const path = require('path');
-const fs = require('fs').promises;
+const flatCache = require('flat-cache');
 const { parseISO, isValid, subMilliseconds } = require('date-fns');
 const pool = require('../db-client');
 const reader = require('./reader');
 const transformer = require('./transformer');
 const kAppApi = require('../k-app-api');
 
-const LAST_RUN_PATH = path.join(__dirname, 'last-run.bin');
+const LAST_RUN_CACHE = flatCache.load('last-run');
 
 /**
  * Save the last run timestamp
  * @param time {Date}
  * @returns {Promise<void>}
  */
-async function saveLastRun(time) {
-  await fs.writeFile(LAST_RUN_PATH, time.toISOString(), { encoding: 'utf8' });
+function saveLastRun(time) {
+  LAST_RUN_CACHE.setKey('date', time.toISOString());
+  LAST_RUN_CACHE.save(true);
 }
 
 /**
@@ -25,7 +25,7 @@ async function saveLastRun(time) {
 async function loadLastRun({ interval = 0 }) {
   let content;
   try {
-    content = await fs.readFile(LAST_RUN_PATH, { encoding: 'utf8' });
+    content = LAST_RUN_CACHE.getKey('date');
   } catch (e) {
     if (e.code === 'ENOENT') return new Date();
     console.warn('Unable to load last run', e);
